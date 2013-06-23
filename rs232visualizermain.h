@@ -1,8 +1,12 @@
 #ifndef RS232VISUALIZERMAIN_H
 #define RS232VISUALIZERMAIN_H
 
+#include <QtWidgets/QApplication>
+#include <QtQml>
+#include <QtQuick/QQuickView>
+#include <QIcon>
 #include <QObject>
-#include "SerialPortThread.h"
+#include "serialconnect.h"
 
 class RS232VisualizerMain : public QObject
 {
@@ -12,25 +16,28 @@ public:
     explicit RS232VisualizerMain(QObject *parent = 0);
     virtual ~RS232VisualizerMain();
 
+    QQmlEngine *engine;
+    QQmlComponent *component;
+    QObject *topLevel;
+    QQuickWindow *window;
+
 signals:
     void openSerialPort();
     void closeSerialPort();
-    void threadStart();
-    void threadStop();
 
 public slots:
-    void closeSerialPortThread();
-    void openSerialPortThread();
-    void setSerialThreadStatus(bool);
 
 private:
-    int createSerialPortThread(QString portName = "/dev/ttyUSB0", QString settings = "1200,8,n,1");
-    SerialPortThread* mainSerialThread;
-    bool serPortThreadStatus;
+ //   int setSerial(QString portName = "/dev/ttyUSB0", QString baud = "1200", QString bit = "8", QString parity ="n", QString stop = "1");
+    SerialConnect* serialPort;
+//    bool serPortStatus;
+    int startGUI();
+    void startSerialPort();
+    void connectionsGUIserial();
 
 private slots:
-    void destroySerialPortThread();
-    void newSerialPortSet(QString);
+//    void destroySerialPort();
+//    void newSerialPortSet(QString);
 
 };
 

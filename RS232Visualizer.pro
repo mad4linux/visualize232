@@ -1,11 +1,11 @@
-QT += widgets qml quick
+QT += widgets qml quick serialport
 CONFIG += console
 TARGET = application
 
 SOURCES += \
     main.cpp \
     rs232visualizermain.cpp \
-    SerialPortThread.cpp
+    serialconnect.cpp
 
 OTHER_FILES += \
     qml/main.qml \
@@ -20,10 +20,6 @@ UI_DIR = ./.ui
 RCC_DIR = ./.rcc
 
 HEADERS +=  rs232visualizermain.h \
-            SerialPortThread.h
+    serialconnect.h
 
 ICON += bitmaps/logo.png
-
-INCLUDEPATH += /usr/local/lib/qserialport/include/QtSerialPort
-
-LIBS += -L/usr/local/lib/qserialport/lib/ -lQtSerialPort
