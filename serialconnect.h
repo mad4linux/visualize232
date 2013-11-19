@@ -4,20 +4,29 @@
 #include <QObject>
 #include <QtSerialPort/QSerialPort>
 #include <QVariant>
+#include <QStringList>
+#include <QBasicTimer>
 
 
 class SerialConnect : public QObject
 {
     Q_OBJECT
+
 public:
     explicit SerialConnect(QObject *parent = 0);
+
+    Q_PROPERTY(QString newSerialData MEMBER newSerialDataString NOTIFY serialDataChanged);
+    Q_PROPERTY(QString serialData MEMBER serialDataString NOTIFY serialDataChanged);
+    Q_PROPERTY(QStringList availablePorts MEMBER availablePortsList NOTIFY availablePortsChanged)
+
 
 signals:
     void sendStatusText(QVariant);
     void sendAvailablePort(QVariant);
     void clearPortsList();
-    void newData(QVariant);
     void opened();
+    void serialDataChanged();
+    void availablePortsChanged();
     
 public slots:
     void open();
@@ -25,6 +34,7 @@ public slots:
     void write(QString);
     void write(const QByteArray&);
     void read();
+    void reduceReads();
 
     void getBaudSettings(qint32);
     void getBitSettings(qint8);
@@ -46,9 +56,15 @@ public slots:
 
     void findAvailablePorts(bool);
 
+protected:
+    void timerEvent(QTimerEvent *event);
+
 private:
     QSerialPort *serial;
-    QStringList *availablePortsList;
+    QString serialDataString;
+    QString newSerialDataString;
+    QStringList availablePortsList;
+    QBasicTimer timer;
     void connectSerialPort();
     struct set {
         QString name;

@@ -6,5 +6,10 @@
         <file>qml/images/refresh-icon.png</file>
         <file>qml/main.qml</file>
         <file>qml/images/refresh-icon-shadow.png</file>
+        <file>qml/FileDialogOpen.qml</file>
+        <file>qml/FileDialogSave.qml</file>
+        <file>qml/SerialDataTerminal.qml</file>
+        <file>qml/SerialPortSettingsDialog.qml</file>
+        <file>qml/TextAreaOwn.qml</file>
     </qresource>
 </RCC>

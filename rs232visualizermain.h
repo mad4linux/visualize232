@@ -28,9 +28,8 @@ signals:
 public slots:
 
 private:
- //   int setSerial(QString portName = "/dev/ttyUSB0", QString baud = "1200", QString bit = "8", QString parity ="n", QString stop = "1");
+
     SerialConnect* serialPort;
-//    bool serPortStatus;
     int startGUI();
     void startSerialPort();
     void connectionsGUIserial();

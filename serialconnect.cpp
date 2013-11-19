@@ -4,12 +4,14 @@
 #include <QStringList>
 #include <QVariant>
 #include <QDebug>
+#include <QTimerEvent>
 
 SerialConnect::SerialConnect(QObject *parent) :
     QObject(parent)
 {
     serial = new QSerialPort;
     connectSerialPort();
+    availablePortsList.append("-");
 }
 
 void SerialConnect::connectSerialPort() {
@@ -105,14 +107,22 @@ void SerialConnect::write(const QByteArray &data) {
 
 }
 
-void SerialConnect::read() {
-    QByteArray newdata = serial->readAll();
-    QVariant dataVariant = newdata;
- //   dataVariant.qvariant_cast
-    newData(dataVariant);
-    qDebug() << "Data in QByteArray = " << newdata;
-    qDebug() << "Data in dataVariant = " << dataVariant;
+void SerialConnect::reduceReads() {
+    if(timer.isActive()) {
+        return;
+    }
+    else {
+        timer.start(50, this);
+    }
 
+}
+
+void SerialConnect::read() {
+    newSerialDataString = serial->readAll();
+    serialDataString.append(newSerialDataString);
+    serialDataChanged();
+//    qDebug() << "Data in QByteArray = " << newdata;
+//    qDebug() << "Data in serialDataString = " << serialDataString;
 }
 
 void SerialConnect::getBaudSettings(qint32 baud) {
@@ -227,26 +237,36 @@ void SerialConnect::storeSerialSettings(QSerialPort::FlowControl flowcontrol) {
 
 void SerialConnect::findAvailablePorts(bool withSystemPorts) {
     qDebug() << "SerialConnect::findAvailablePorts() called withSystemPorts = " << withSystemPorts;
-    clearPortsList();
-    availablePortsList = new QStringList;
+    availablePortsList.clear();
 
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
         if(!withSystemPorts) {
             qDebug() << "SerialConnect::findAvailablePorts(): omitting system port";
             if(!info.portName().contains("ttyS")) {
-                sendAvailablePort((QVariant) info.portName());
+                availablePortsList.append(info.portName());
+                //sendAvailablePort((QVariant) info.portName());
             }
         }
         else {
-            sendAvailablePort((QVariant) info.portName());
+            availablePortsList.append(info.portName());
+            //sendAvailablePort((QVariant) info.portName());
         }
-        QStringList list;
-        list << info.portName() << info.systemLocation() << info.description() << info.manufacturer() << (info.vendorIdentifier() ? QString::number(info.vendorIdentifier(), 16) : QString()) << (info.productIdentifier() ? QString::number(info.productIdentifier(), 16) : QString());
-        availablePortsList->append(list);
-
-        qDebug() << info.portName();// << info.systemLocation() << info.description() << info.manufacturer() << (info.vendorIdentifier() ? QString::number(info.vendorIdentifier(), 16) : QString()) << (info.productIdentifier() ? QString::number(info.productIdentifier(), 16) : QString());
-
     }
+    availablePortsChanged();
+    qDebug() << "SerialConnect::availablePortsList = "<< availablePortsList;
+    // further info functions provided by serail class but not used  info.systemLocation() << info.description() << info.manufacturer() << (info.vendorIdentifier() ? QString::number(info.vendorIdentifier(), 16) : QString()) << (info.productIdentifier() ? QString::number(info.productIdentifier(), 16) : QString());
+
+}
+
+void SerialConnect::timerEvent(QTimerEvent *event)
+{
+    if (event->timerId() == timer.timerId()) {
+        // timer event is from timer set by object
+        timer.stop();
+        read();
+    } /*else {
+        QWidget::timerEvent(event); //if you want to use widgets in an application, uncomment this line
+    }*/
 }
 
  /******************************************************

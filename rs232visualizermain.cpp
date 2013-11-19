@@ -15,9 +15,10 @@
 RS232VisualizerMain::RS232VisualizerMain(QObject *parent) :
     QObject(parent)
 {
-    startGUI();
     startSerialPort();
+    startGUI();
     connectionsGUIserial();
+    //connect serialDataChanged to this and engine->rootContext()->setContextProperty("serialPortC",serialPort); again to update properties
 }
 
 RS232VisualizerMain::~RS232VisualizerMain()
@@ -28,6 +29,9 @@ RS232VisualizerMain::~RS232VisualizerMain()
 int RS232VisualizerMain::startGUI() {
     engine = new QQmlEngine;
     component = new QQmlComponent(engine);
+
+    // doesn't work with serial port in separat thread
+    engine->rootContext()->setContextProperty("serialPortC",serialPort);
 
     component->loadUrl(QUrl("qrc:/qml/main.qml"));
     if ( !component->isReady() ) {
@@ -54,7 +58,6 @@ void RS232VisualizerMain::startSerialPort() {
 }
 
 void RS232VisualizerMain::connectionsGUIserial() {
-    //connect Serial Port/open with serial.open()
     connect(topLevel, SIGNAL(guiOpenSerial()),serialPort,SLOT(open()));
     connect(topLevel, SIGNAL(guiCloseSerial()),serialPort,SLOT(close()));
     connect(topLevel, SIGNAL(guiSendSerialData(QString)), serialPort, SLOT(write(QString)));
@@ -67,9 +70,6 @@ void RS232VisualizerMain::connectionsGUIserial() {
     connect(topLevel, SIGNAL(guiGetAvailableSerialPorts(bool)),serialPort,SLOT(findAvailablePorts(bool)));
 
     connect(serialPort,SIGNAL(sendStatusText(QVariant)),topLevel, SLOT(getStatusText(QVariant)));
-    connect(serialPort,SIGNAL(sendAvailablePort(QVariant)),topLevel, SLOT(getAvailablePort(QVariant)));
-    connect(serialPort,SIGNAL(clearPortsList()),topLevel,SLOT(clearSerialPortsList()));
-    connect(serialPort, SIGNAL(newData(QVariant)), topLevel, SLOT(displaySerialData(QVariant)));
     connect(serialPort,SIGNAL(opened()),topLevel,SLOT(serialPortOpenSlot()));
 
 }
