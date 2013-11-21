@@ -96,9 +96,9 @@ ApplicationWindow {
         startupTextSerialClosed.state = "serialOpen"
     }
 
-    //line below doesn't work is related to rs232visualizermain.cpp line 21 and 34
-    //serialPortC.onNewSerialDataChanged: serialDataView.appendNewSerialData(serialPortC.newSerialData)
-
+    function newSerialDataSlot() {
+        serialDataView.appendNewSerialData(serialPortC.newSerialData)
+    }
 
     menuBar: MenuBar {
         Menu {

@@ -31,7 +31,6 @@ int RS232VisualizerMain::startGUI() {
     engine = new QQmlEngine;
 
     // doesn't work with serial port in separat thread r doesn't work at all?
-    //engine->rootContext()->setContextProperty("serialPortC",serialPort);
     engine->rootContext()->setContextProperty("serialPortC",serialPort);
 
     component = new QQmlComponent(engine);
@@ -73,6 +72,7 @@ void RS232VisualizerMain::connectionsGUIserial() {
 
     connect(serialPort,SIGNAL(sendStatusText(QVariant)),topLevel, SLOT(getStatusText(QVariant)));
     connect(serialPort,SIGNAL(opened()),topLevel,SLOT(serialPortOpenSlot()));
+    connect(serialPort,SIGNAL(serialDataChanged()),topLevel, SLOT(newSerialDataSlot()));
 
 }
 

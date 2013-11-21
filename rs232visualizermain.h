@@ -21,9 +21,11 @@ public:
     QObject *topLevel;
     QQuickWindow *window;
 
+
 signals:
     void openSerialPort();
     void closeSerialPort();
+    void serialObjectChanged();
 
 public slots:
 

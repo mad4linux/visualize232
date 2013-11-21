@@ -57,7 +57,6 @@ Rectangle {
         width: parent.width-100
         highlightOnFocus: false
         readOnly: true
-//        text: text + serialPortC.newSerialData  // replace with append same lines
     }
     Text {
         anchors.left: parent.left
