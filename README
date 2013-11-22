@@ -1,0 +1,8 @@
+The application can connect to RS232 serial interfaces, either the original with Sub-D interfaces or over USB ports.
+Text can be sended over the port and received and displayed (much like any other serial terminal).
+So far, the application was only compiled on linux 64bit intel with Qt5.1. No other OSes or architectures have been tested (or will be) for the moment.
+It should compile on other platforms that QT5 supports, because no OS specific code is used so far. Except the "exclude serial ports" function wich will only work for unix systems calling the system ports ttyX.
+
+Plans for the future are custom views for certain devices:
+- Philips PM 97 digital oscilloscpe
+- Arduino projects by SMAS (swiss mechatronic art society)
