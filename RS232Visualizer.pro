@@ -29,3 +29,5 @@ HEADERS +=  rs232visualizermain.h \
     thread.h
 
 ICON += bitmaps/logo.png
+
+CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT

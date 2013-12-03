@@ -21,6 +21,9 @@ Rectangle {
         guiSetSerialSettingsFlowcontrol(flowcontrolChoices.get(flowcontrolCombo.currentIndex).value)
     }
 
+    Component.onCompleted: {
+//??crash        appSettings.setValue("serialPort/BAUD", 9600)
+    }
 
 
 ListModel {

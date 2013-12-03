@@ -6,6 +6,7 @@
 #include <QtQuick/QQuickView>
 #include <QIcon>
 #include <QObject>
+#include <QSettings>
 #include "serialconnect.h"
 
 class RS232VisualizerMain : public QObject
@@ -32,9 +33,11 @@ public slots:
 private:
 
     SerialConnect* serialPort;
+    QSettings* appSettings;
     int startGUI();
     void startSerialPort();
     void connectionsGUIserial();
+    void initializeSettings();
 
 private slots:
 //    void destroySerialPort();

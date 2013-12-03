@@ -17,11 +17,11 @@ SerialConnect::SerialConnect(QObject *parent) :
 void SerialConnect::connectSerialPort() {
     connect(serial, SIGNAL(baudRateChanged(qint32,QSerialPort::Directions)), this, SLOT(storeSerialSettings(qint32,QSerialPort::Directions)));
     connect(serial, SIGNAL(dataBitsChanged(QSerialPort::DataBits)), this, SLOT(storeSerialSettings(QSerialPort::DataBits)));
-            connect(serial, SIGNAL(flowControlChanged(QSerialPort::FlowControl)), this, SLOT(storeSerialSettings(QSerialPort::FlowControl)));
-            connect(serial, SIGNAL(parityChanged(QSerialPort::Parity)), this, SLOT(storeSerialSettings(QSerialPort::Parity)));
-            connect(serial, SIGNAL(stopBitsChanged(QSerialPort::StopBits)), this, SLOT(storeSerialSettings(QSerialPort::StopBits)));
-            connect(serial,SIGNAL(readyRead()), this, SLOT(read()));
-
+    connect(serial, SIGNAL(flowControlChanged(QSerialPort::FlowControl)), this, SLOT(storeSerialSettings(QSerialPort::FlowControl)));
+    connect(serial, SIGNAL(parityChanged(QSerialPort::Parity)), this, SLOT(storeSerialSettings(QSerialPort::Parity)));
+    connect(serial, SIGNAL(stopBitsChanged(QSerialPort::StopBits)), this, SLOT(storeSerialSettings(QSerialPort::StopBits)));
+//    connect(serial,SIGNAL(readyRead()), this, SLOT(read()));
+    connect(serial,SIGNAL(readyRead()), this, SLOT(reduceReads()));  //?? trying to replace connection above to reduce read calls (only one call every 50ms
 }
 
 /*********************************************
