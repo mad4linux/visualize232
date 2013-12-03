@@ -18,6 +18,7 @@ RS232VisualizerMain::RS232VisualizerMain(QObject *parent) :
     startSerialPort();
     startGUI();
     connectionsGUIserial();
+    initializeSettings();
     //connect serialDataChanged to this and engine->rootContext()->setContextProperty("serialPortC",serialPort); again to update properties
 
 }
@@ -27,11 +28,20 @@ RS232VisualizerMain::~RS232VisualizerMain()
 
 }
 
+void RS232VisualizerMain::initializeSettings() {
+    QCoreApplication::setOrganizationName("gaesstec");
+    QCoreApplication::setOrganizationDomain("gaess.ch");
+    QCoreApplication::setApplicationName("visualize232");
+
+    appSettings = new QSettings;
+}
+
 int RS232VisualizerMain::startGUI() {
     engine = new QQmlEngine;
 
-    // doesn't work with serial port in separat thread r doesn't work at all?
+    //export context properties to qml
     engine->rootContext()->setContextProperty("serialPortC",serialPort);
+    engine->rootContext()->setContextProperty("appSettings",appSettings);
 
     component = new QQmlComponent(engine);
     component->loadUrl(QUrl("qrc:/qml/main.qml"));
