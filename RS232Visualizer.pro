@@ -5,8 +5,7 @@ TARGET = application
 SOURCES += \
     main.cpp \
     rs232visualizermain.cpp \
-    serialconnect.cpp \
-    thread.cpp
+    serialconnect.cpp
 
 OTHER_FILES += \
     qml/main.qml \
@@ -25,8 +24,7 @@ UI_DIR = ./.ui
 RCC_DIR = ./.rcc
 
 HEADERS +=  rs232visualizermain.h \
-    serialconnect.h \
-    thread.h
+    serialconnect.h
 
 ICON += bitmaps/logo.png
 
