@@ -53,6 +53,7 @@ ApplicationWindow {
 
     property int getSystemPorts: 0
 
+
     // signals to C++
     signal guiOpenSerial()
     signal guiCloseSerial()
@@ -70,12 +71,31 @@ ApplicationWindow {
 
     // UI internal bindings
     Component.onCompleted: {
+        loadSettings()
         mainwin.guiSendSerialData.connect(serialDataView.deleteTextInputField)
     }
 
-/*    function newSerialDataSlot() {
-        serialDataView.appendNewSerialData(serialPortC.newSerialData)
-    } */
+    onClosing: {
+        saveSettings()
+    }
+
+    function loadSettings() {
+        mainwin.setX(staticSettings.value("MainWindow/x") )
+        mainwin.setY(staticSettings.value("MainWindow/y") )
+        mainwin.setWidth(staticSettings.value("MainWindow/width") )
+        mainwin.setHeight(staticSettings.value("MainWindow/height") )
+
+    }
+
+    function saveSettings() {
+        staticSettings.setValue("MainWindow/x", mainwin.x )
+        staticSettings.setValue("MainWindow/y", mainwin.y )
+        staticSettings.setValue("MainWindow/width", mainwin.width)
+        staticSettings.setValue("MainWindow/height", mainwin.height)
+
+    }
+
+
 
     function sendSerialClose() {
         guiCloseSerial()
@@ -98,6 +118,12 @@ ApplicationWindow {
 
     function newSerialDataSlot() {
         serialDataView.appendNewSerialData(serialPortC.newSerialData)
+    }
+
+    function copy() {
+        if (serialDataView.visible  ) {
+            serialDataView.copy()  //copies text to clipboard
+        }
     }
 
     menuBar: MenuBar {
@@ -124,11 +150,12 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("Copy")
                 shortcut: "Ctrl+C"
+                onTriggered: copy()
             }
-            MenuItem {
+        /*    MenuItem {
                 text: qsTr("Paste")
                 shortcut: "Ctrl+V"
-            }
+            } */
         }
         Menu {
                     title: qsTr("Serial Port")

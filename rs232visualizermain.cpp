@@ -4,6 +4,7 @@
 #include <QIcon>
 #include <QDebug>
 #include "rs232visualizermain.h"
+#include "appsettings.h"
 
 
 /***********************************************************
@@ -15,11 +16,11 @@
 RS232VisualizerMain::RS232VisualizerMain(QObject *parent) :
     QObject(parent)
 {
+    initializeSettings();
     startSerialPort();
     startGUI();
     connectionsGUIserial();
-    initializeSettings();
-    //connect serialDataChanged to this and engine->rootContext()->setContextProperty("serialPortC",serialPort); again to update properties
+    connectionsCore();
 
 }
 
@@ -33,7 +34,10 @@ void RS232VisualizerMain::initializeSettings() {
     QCoreApplication::setOrganizationDomain("gaess.ch");
     QCoreApplication::setApplicationName("visualize232");
 
-    appSettings = new QSettings;
+    staticSettings = new AppSettings();
+   // staticSettings->setValue("serialPort/test", "value");
+
+
 }
 
 int RS232VisualizerMain::startGUI() {
@@ -41,7 +45,7 @@ int RS232VisualizerMain::startGUI() {
 
     //export context properties to qml
     engine->rootContext()->setContextProperty("serialPortC",serialPort);
-    engine->rootContext()->setContextProperty("appSettings",appSettings);
+    engine->rootContext()->setContextProperty("staticSettings",staticSettings);
 
     component = new QQmlComponent(engine);
     component->loadUrl(QUrl("qrc:/qml/main.qml"));
@@ -49,16 +53,19 @@ int RS232VisualizerMain::startGUI() {
         qWarning("%s", qPrintable(component->errorString()));
         return 1;
     }
+
     topLevel = component->create();
     window = qobject_cast<QQuickWindow *>(topLevel);
     if ( !window ) {
         qWarning("Error: Your root item has to be a Window.");
         return 1;
     }
+
+
+
     window->show();
     window->setIcon(QIcon(":/bitmaps/RS232VisIcon.png"));
 
-    QObject::connect(engine, SIGNAL(quit()),QCoreApplication::instance(), SLOT(quit()));
     return 0;
 }
 
@@ -86,13 +93,20 @@ void RS232VisualizerMain::connectionsGUIserial() {
 
 }
 
+void RS232VisualizerMain::connectionsCore() {
+    connect(engine, SIGNAL(quit()),QCoreApplication::instance(), SLOT(quit()));
+//    connect(QCoreApplication::instance(), SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()) );
+}
+
 /***********************************************************
  *
  * public slots
  *
  ***********************************************************/
 
+/*void RS232VisualizerMain::aboutToQuit() {
 
+} */
 
 /***********************************************************
  *

@@ -241,7 +241,6 @@ void SerialConnect::findAvailablePorts(bool withSystemPorts) {
 
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
         if(!withSystemPorts) {
-            qDebug() << "SerialConnect::findAvailablePorts(): omitting system port";
             if(!info.portName().contains("ttyS")) {
                 availablePortsList.append(info.portName());
                 //sendAvailablePort((QVariant) info.portName());

@@ -23,6 +23,10 @@ Rectangle {
         guiSendSerialData(text)
     }
 
+    function copy() {
+        serialDataCommunication.copy()
+    }
+
     gradient: Gradient {
         GradientStop {
             position: 0.00;
@@ -35,6 +39,10 @@ Rectangle {
     }
     border.color: "#b4bbbe"
     anchors.fill: parent
+
+
+
+
     Text {
         anchors.left: parent.left
         anchors.leftMargin: 5
@@ -96,6 +104,13 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 5
         text: qsTr("send carriage return when pressing enter")
-        onCheckedStateChanged: { sendCarriageReturn = checked }
+
+        checkedState: staticSettings.value("SerialDataTerminal/sendCarriageReturnCheck", Qt.Checked )
+        onCheckedStateChanged: {
+            sendCarriageReturn = checked
+            staticSettings.setValue("SerialDataTerminal/sendCarriageReturnCheck",checkedState)
+        }
+
     }
+
 }

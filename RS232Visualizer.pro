@@ -24,7 +24,8 @@ UI_DIR = ./.ui
 RCC_DIR = ./.rcc
 
 HEADERS +=  rs232visualizermain.h \
-    serialconnect.h
+    serialconnect.h \
+    appsettings.h
 
 ICON += bitmaps/logo.png
 

@@ -7,9 +7,19 @@ Rectangle {
 
     property bool includeSystemPorts: false
     property string newPortChoice
+    property int serialBaud
 
 
     onNewPortChoiceChanged: portChoices.append({ "text": newPortChoice })
+
+    function saveSettings() {
+        staticSettings.setValue("serialPortSettings/BaudChoice", baudCombo.currentIndex)
+        staticSettings.setValue("serialPortSettings/DataBitsChoice", bitCombo.currentIndex)
+        staticSettings.setValue("serialPortSettings/ParityChoice", parityCombo.currentIndex)
+        staticSettings.setValue("serialPortSettings/StopBitsChoice",stopbitsCombo.currentIndex)
+        staticSettings.setValue("serialPortSettings/FlowControlChoice",flowcontrolCombo.currentIndex)
+
+    }
 
     function sendSerialOpen() {
         guiSetSerialSettingsPort(portCombo.currentText)
@@ -19,10 +29,6 @@ Rectangle {
         guiSetSerialSettingsParity(parityChoices.get(parityCombo.currentIndex).value)
         guiSetSerialSettingsStopbits(stopbitsCombo.currentText)
         guiSetSerialSettingsFlowcontrol(flowcontrolChoices.get(flowcontrolCombo.currentIndex).value)
-    }
-
-    Component.onCompleted: {
-//??crash        appSettings.setValue("serialPort/BAUD", 9600)
     }
 
 
@@ -135,7 +141,7 @@ ListModel {
             ComboBox {
                 id: baudCombo;
                 model: baudChoices;
-                currentIndex: 2
+                currentIndex: staticSettings.value("serialPortSettings/BaudChoice",2)
             }
         }
         RowLayout {
@@ -148,7 +154,7 @@ ListModel {
             ComboBox {
                 id: bitCombo;
                 model: bitChoices;
-                currentIndex: 1
+                currentIndex: staticSettings.value("serialPortSettings/DataBitsChoice",1)
             }
         }
         RowLayout {
@@ -161,7 +167,7 @@ ListModel {
             ComboBox {
                 id: parityCombo;
                 model: parityChoices;
-                currentIndex: 0
+                currentIndex: staticSettings.value("serialPortSettings/ParityChoice",0)
             }
         }
         RowLayout {
@@ -174,7 +180,7 @@ ListModel {
             ComboBox {
                 id: stopbitsCombo;
                 model: stopbitsChoices;
-                currentIndex: 1
+                currentIndex: staticSettings.value("serialPortSettings/StopBitsChoice",1)
             }
         }
         RowLayout {
@@ -187,7 +193,7 @@ ListModel {
             ComboBox {
                 id: flowcontrolCombo;
                 model: flowcontrolChoices;
-                currentIndex: 0
+                currentIndex: staticSettings.value("serialPortSettings/FlowControlChoice",0)
             }
         }
         RowLayout{
@@ -200,13 +206,17 @@ ListModel {
             Button {
                 id: serialSettingsSet
                 text: qsTr("Set")
-                onClicked: sendSerialOpen()
+                onClicked: {
+                    sendSerialOpen()
+                    saveSettings()
+                }
             }
             Button {
                 id: serialSettingsOK
                 text: qsTr("OK")
                 onClicked: {
                     sendSerialOpen()
+                    saveSettings()
                     serialSettingsView.state = "invisible"
                 }
             }
